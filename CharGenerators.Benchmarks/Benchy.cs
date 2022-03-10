@@ -1,10 +1,10 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
-using CharGenerators.Attributes;
+using CharGenerators;
 
 namespace ConsoleApp;
 
-[CharExtensions(Global = true, OptimizeFor = "0123456789")]
+[CharExtensions]
 [GroupBenchmarksBy(BenchmarkLogicalGroupRule.ByCategory, BenchmarkLogicalGroupRule.ByParams)]
 [MemoryDiagnoser, DisassemblyDiagnoser(printInstructionAddresses: true, printSource: true, exportDiff: true)]
 public partial class Benchy
@@ -25,17 +25,17 @@ public partial class Benchy
             buffer[0] = value;
         });
 
-    [Benchmark]
-    public string ToStringFast() => Characters.ToStringFast();
+    //[Benchmark]
+    //public string ToStringFast() => Characters.ToStringFast();
 }
 
-[CharExtensions(OptimizeFor = "0123456789")]
+//[CharExtensions(OptimizeFor = "0123456789")]
 public partial class PrivateBenchy
 {
     [Params('0')]
     public char Characters { get; set; }
 
-    [Benchmark]
-    public string CharToStringFast() => CharToStringFast(Characters);
+    //[Benchmark]
+    //public string CharToStringFast() => CharToStringFast(Characters);
 }
 

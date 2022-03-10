@@ -1,9 +1,9 @@
-﻿using CharGenerators.Attributes;
+using CharGenerators;
 using Xunit;
 
 namespace CharGenerators.Tests.IntegrationTests
 {
-    [CharExtensions(Global = true, OptimizeFor = "0123456789")]
+    //[CharExtensions(Global = true, OptimizeFor = "0123456789")]
     public partial class GlobalTestClass
     {
 

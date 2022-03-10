@@ -1,4 +1,4 @@
-namespace CharGenerators.Attributes
+namespace CharGenerators
 {
     [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false)]
     [System.Diagnostics.Conditional("CHARGENERATORS_USAGES")]
