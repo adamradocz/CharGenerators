@@ -15,11 +15,9 @@ public partial class ToStringBenchmarks
     public string CharToString() => Characters.ToString();
 
     [Benchmark]
-    public string StringCreate() => StringCreateReverseSkipLocalsInit(Characters);
-
     [System.Runtime.CompilerServices.SkipLocalsInit]
-    public static string StringCreateReverseSkipLocalsInit(char character) =>
-        string.Create(1, character, (buffer, value) =>
+    public string StringCreate() =>
+        string.Create(1, Characters, (buffer, value) =>
         {
             buffer[0] = value;
         });

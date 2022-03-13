@@ -5,9 +5,10 @@ using Xunit.Abstractions;
 
 namespace CharGenerators.Tests;
 
-[UsesVerify]
+[UsesVerify] // 👈 Adds hooks for Verify into XUnit
 public class CharGeneratorTests
 {
+    private const string _snapshotsDirectory = "Snapshots";
     private readonly ITestOutputHelper _output;
 
     public CharGeneratorTests(ITestOutputHelper output)
@@ -18,11 +19,75 @@ public class CharGeneratorTests
     [Fact]
     public Task CanGenerateCharExtensionsInGlobalNamespace()
     {
+        // The source code to test.
         const string input = @"
 using CharGenerators;
 
-[CharExtensions(Global = true, OptimizeFor = ""0123456789"")]
-public partial class GlobalTestClass
+[CharExtensions(Global = true)]
+public class MyTestClass
+{
+
+}";
+
+        // Pass the source code to our helper and snapshot test the output.
+        var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
+
+        Assert.Empty(diagnostics);
+        return Verifier.Verify(output).UseDirectory(_snapshotsDirectory);
+    }
+
+    [Fact]
+    public Task CanGenerateCharExtensionsInChildNamespace()
+    {
+        const string input = @"
+using CharGenerators;
+
+namespace MyTestNamespace
+{
+    [CharExtensions(Global = true)]
+    public class MyTestClass
+    {
+
+    }
+}";
+
+        var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
+
+        Assert.Empty(diagnostics);
+        return Verifier.Verify(output).UseDirectory(_snapshotsDirectory);
+    }
+
+    [Fact]
+    public Task CanGenerateCharExtensionsInSubChildNamespace()
+    {
+        const string input = @"
+using CharGenerators;
+
+namespace MyTestNamespace.Sub;
+
+[CharExtensions(Global = true, OptimizeFor = ""*"")]
+public class MyTestClass
+{
+
+}
+";
+
+        var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
+
+        Assert.Empty(diagnostics);
+        return Verifier.Verify(output).UseDirectory(_snapshotsDirectory);
+    }
+
+    [Fact]
+    public Task CanGeneratePrivateHelperMethods()
+    {
+        const string input = @"
+using CharGenerators;
+
+namespace MyTestNamespace;
+
+[CharExtensions]
+public partial class MyTestClass
 {
 
 }";
@@ -30,63 +95,26 @@ public partial class GlobalTestClass
         var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
 
         Assert.Empty(diagnostics);
-        return Verifier.Verify(output).UseDirectory("Snapshots");
+        return Verifier.Verify(output).UseDirectory(_snapshotsDirectory);
     }
 
     [Fact]
-    public Task CanGeneratePrivateCharHelperMethods()
+    public Task CanGeneratePrivateHelperMethodsWithCustomOptimization()
     {
-        const string input = @"using Generator.CharGenerators;
+        const string input = @"
+using CharGenerators;
+
+namespace MyTestNamespace;
 
 [CharExtensions(OptimizeFor = ""0123456789"")]
-public partial class PrivateTestClass
-    {
-
-    }";
-
-        var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
-
-        Assert.Empty(diagnostics);
-        return Verifier.Verify(output).UseDirectory("Snapshots");
-    }
-
-    [Fact]
-    public Task CanGenerateGlobalCharExtensionsWithNamespace()
-    {
-        const string input = @"using Generator.CharGenerators;
-
-namespace TestNamespace
+public partial class MyTestClass
 {
-    [CharExtensions(Global = true, OptimizeFor = ""0123456789"")]
-    public partial class GlobalTestClass
-        {
-    
-        }
+
 }";
 
         var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
 
         Assert.Empty(diagnostics);
-        return Verifier.Verify(output).UseDirectory("Snapshots");
-    }
-
-    [Fact]
-    public Task CanGeneratePrivateCharHelperMethodsWithNamespace()
-    {
-        const string input = @"using Generator.CharGenerators;
-
-namespace TestNamespace
-{
-    [CharExtensions(OptimizeFor = ""0123456789"")]
-    public partial class PrivateTestClass
-        {
-    
-        }
-}";
-
-        var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
-
-        Assert.Empty(diagnostics);
-        return Verifier.Verify(output).UseDirectory("Snapshots");
+        return Verifier.Verify(output).UseDirectory(_snapshotsDirectory);
     }
 }

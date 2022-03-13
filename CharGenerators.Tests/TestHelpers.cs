@@ -20,12 +20,7 @@ internal class TestHelpers
                 MetadataReference.CreateFromFile(typeof(CharExtensionsAttribute).Assembly.Location)
             });
 
-        var compilation = CSharpCompilation.Create(
-            "generator",
-            new[] { syntaxTree },
-            references,
-            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
-
+        var compilation = CSharpCompilation.Create("generator", new[] { syntaxTree }, references, new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
         var originalTreeCount = compilation.SyntaxTrees.Length;
         var generator = new T();
 

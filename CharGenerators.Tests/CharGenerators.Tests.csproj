@@ -29,4 +29,8 @@
     <ProjectReference Include="..\CharGenerators.Attributes\CharGenerators.Attributes.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Snapshots\" />
+  </ItemGroup>
+
 </Project>
