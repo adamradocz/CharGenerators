@@ -1,11 +1,10 @@
-﻿using BenchmarkDotNet.Running;
-using ConsoleApp;
+using BenchmarkDotNet.Running;
+using CharGenerators.Benchmarks;
 
 BenchmarkSwitcher benchmarkSwitcher = new(
     new[]
     {
-        typeof(Benchy),
-        typeof(PrivateBenchy)
+        typeof(ToStringBenchmarks)
     });
 
 benchmarkSwitcher.Run(args);

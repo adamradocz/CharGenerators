@@ -40,14 +40,14 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
-    static bool IsSyntaxTargetForGeneration(SyntaxNode node) => node is ClassDeclarationSyntax m && m.AttributeLists.Count > 0;
+    static bool IsSyntaxTargetForGeneration(in SyntaxNode node) => node is ClassDeclarationSyntax m && m.AttributeLists.Count > 0;
 
     /// <summary>
     /// Filter syntax to only classes which have the [CharExtensions] attribute.
     /// </summary>
     /// <param name="context"></param>
     /// <returns></returns>
-    static ClassDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext context)
+    static ClassDeclarationSyntax? GetSemanticTargetForGeneration(in GeneratorSyntaxContext context)
     {
         // We know the node is a ClassDeclarationSyntax thanks to IsSyntaxTargetForGeneration.
         var classDeclarationSyntax = (ClassDeclarationSyntax)context.Node;
@@ -79,7 +79,7 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
         return null;
     }
 
-    private static void Execute(Compilation compilation, ImmutableArray<ClassDeclarationSyntax> classes, SourceProductionContext context)
+    private static void Execute(in Compilation compilation, in ImmutableArray<ClassDeclarationSyntax> classes, in SourceProductionContext context)
     {
         if (classes.IsDefaultOrEmpty)
         {
@@ -111,7 +111,7 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
         }
     }
 
-    static List<ClassToGenerate> GetTypesToGenerate(Compilation compilation, IEnumerable<ClassDeclarationSyntax> classes, CancellationToken ct)
+    static List<ClassToGenerate> GetTypesToGenerate(in Compilation compilation, in IEnumerable<ClassDeclarationSyntax> classes, in CancellationToken ct)
     {
         var classesToGenerate = new List<ClassToGenerate>();
 
@@ -173,7 +173,7 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
                 fullyQualifiedName: fullyQualifiedName,
                 ns: nameSpace,
                 accessibility: classSymbol.DeclaredAccessibility,
-                optimizeFor: optimizeFor,
+                optimizeFor: optimizeFor!,
                 global: global));
         }
 

@@ -8,8 +8,7 @@ namespace CharGenerators.Tests;
 
 internal class TestHelpers
 {
-    public static (ImmutableArray<Diagnostic> Diagnostics, string Output) GetGeneratedOutput<T>(string source)
-    where T : IIncrementalGenerator, new()
+    public static (ImmutableArray<Diagnostic> Diagnostics, string Output) GetGeneratedOutput<T>(string source) where T : IIncrementalGenerator, new()
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
         var references = AppDomain.CurrentDomain.GetAssemblies()
@@ -17,8 +16,8 @@ internal class TestHelpers
             .Select(_ => MetadataReference.CreateFromFile(_.Location))
             .Concat(new[]
             {
-            MetadataReference.CreateFromFile(typeof(T).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(CharExtensionsAttribute).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof(T).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(CharExtensionsAttribute).Assembly.Location)
             });
 
         var compilation = CSharpCompilation.Create(
