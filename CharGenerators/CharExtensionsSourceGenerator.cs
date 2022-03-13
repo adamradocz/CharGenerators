@@ -12,13 +12,14 @@ namespace CharGenerators;
 [Generator]
 public class CharExtensionsSourceGenerator : IIncrementalGenerator
 {
-    private const string _charExtensionsAttribute = "Generator.CharGenerators.CharExtensionsAttribute";
+    private const string _charExtensionsAttribute = "CharExtensions";
+    private const string _charExtensionsAttributeFullName = $"{nameof(CharGenerators)}.{nameof(CharExtensionsAttribute)}";
     private const string _asciiPrintableCharacters = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Add the marker attribute to the compilation
-        context.RegisterPostInitializationOutput(ctx => ctx.AddSource("CharExtensionsAttribute.g.cs", SourceText.From(SourceGenerationHelper.Attribute, Encoding.UTF8)));
+        context.RegisterPostInitializationOutput(ctx => ctx.AddSource($"{nameof(CharExtensionsAttribute)}.g.cs", SourceText.From(SourceGenerationHelper.Attribute, Encoding.UTF8)));
 
         // Do a simple filter for classes
         IncrementalValuesProvider<ClassDeclarationSyntax> classDeclarations = context.SyntaxProvider
@@ -66,7 +67,7 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
                 string fullName = attributeContainingTypeSymbol.ToDisplayString();
 
                 // Is the attribute the [CharExtensions] attribute?
-                if (fullName == _charExtensionsAttribute)
+                if (fullName == _charExtensionsAttributeFullName)
                 {
                     // Return the class.
                     return classDeclarationSyntax;
@@ -100,12 +101,12 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
             if (classToGenerate.Global)
             {
                 string result = SourceGenerationHelper.GenerateExtensionClass(classToGenerate);
-                context.AddSource("CharExtensions.g.cs", SourceText.From(result, Encoding.UTF8));
+                context.AddSource($"{_charExtensionsAttribute}.g.cs", SourceText.From(result, Encoding.UTF8));
             }
             else
             {
                 string result = SourceGenerationHelper.GeneratePrivateHelperClass(classToGenerate);
-                context.AddSource($"{classToGenerate.Name}CharExtensions.g.cs", SourceText.From(result, Encoding.UTF8));
+                context.AddSource($"{classToGenerate.Name}{_charExtensionsAttribute}.g.cs", SourceText.From(result, Encoding.UTF8));
             }
         }
     }
@@ -115,7 +116,7 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
         var classesToGenerate = new List<ClassToGenerate>();
 
         // Get the semantic representation of our marker attribute.
-        INamedTypeSymbol? classAttribute = compilation.GetTypeByMetadataName(_charExtensionsAttribute);
+        INamedTypeSymbol? classAttribute = compilation.GetTypeByMetadataName(_charExtensionsAttributeFullName);
 
         if (classAttribute == null)
         {

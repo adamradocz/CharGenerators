@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CharGenerators\CharGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\CharGenerators.Attributes\CharGenerators.Attributes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
   </ItemGroup>
 
 </Project>

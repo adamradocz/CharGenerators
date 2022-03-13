@@ -10,8 +10,8 @@ namespace CharGenerators
         public string OptimizeFor { get; set; }
 
         /// <summary>
-        /// If set to <c>true</c>, the <c>ToStringFast</c> extension method will be created.
-        /// If set to <c>false</c>, a <c>private string CharToStringFast(char value)</c> class specific method will be created.
+        /// If set to <c>true</c>, the <c>ToStringFast</c> extension method will be generated.
+        /// If set to <c>false</c>, the class specific <c>CharToStringFast(char value)</c> method will be generated.
         /// </summary>
         public bool Global { get; set; }
     }
