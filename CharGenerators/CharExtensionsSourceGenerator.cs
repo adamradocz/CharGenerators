@@ -117,7 +117,6 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
 
         // Get the semantic representation of our marker attribute.
         INamedTypeSymbol? classAttribute = compilation.GetTypeByMetadataName(_charExtensionsAttributeFullName);
-
         if (classAttribute == null)
         {
             // If this is null, the compilation couldn't find the marker attribute type
@@ -125,7 +124,7 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
             return classesToGenerate;
         }
 
-        foreach (ClassDeclarationSyntax classDeclarationSyntax in classes)
+        foreach (var classDeclarationSyntax in classes)
         {
             // Stop if we're asked to.
             ct.ThrowIfCancellationRequested();
@@ -145,8 +144,16 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
             string? optimizeFor = null;
             bool global = false;
 
-            foreach (AttributeData attributeData in classSymbol.GetAttributes())
+            // Loop through all of the attributes on the class until we find the [CharExtensions] attribute
+            foreach (var attributeData in classSymbol.GetAttributes())
             {
+                if (!classAttribute.Equals(attributeData.AttributeClass, SymbolEqualityComparer.Default))
+                {
+                    // This isn't the [CharExtensions] attribute
+                    continue;
+                }
+
+                // This is the attribute, check all of the named arguments
                 foreach (KeyValuePair<string, TypedConstant> namedArgument in attributeData.NamedArguments)
                 {
                     if (namedArgument.Key == "OptimizeFor" && namedArgument.Value.Value?.ToString() is { } optimizeForValue)
@@ -170,8 +177,8 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
             // Create an ClassToGenerate for use in the generation phase
             classesToGenerate.Add(new ClassToGenerate(
                 name: name,
-                fullyQualifiedName: fullyQualifiedName,
                 ns: nameSpace,
+                fullyQualifiedName: fullyQualifiedName,
                 accessibility: classSymbol.DeclaredAccessibility,
                 optimizeFor: optimizeFor!,
                 global: global));
