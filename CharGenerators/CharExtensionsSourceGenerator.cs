@@ -16,6 +16,7 @@ public class CharExtensionsSourceGenerator : IIncrementalGenerator
     private const string _charExtensionsAttributeFullName = $"{nameof(CharGenerators)}.{nameof(CharExtensionsAttribute)}";
     private const string _asciiPrintableCharacters = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
+    /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         // Add the marker attribute to the compilation
