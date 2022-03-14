@@ -38,7 +38,7 @@ namespace CharGenerators
 #endif
 ";
 
-    public static string GeneratePrivateHelperClass(ClassToGenerate classToGenerate)
+    public static string GeneratePrivateHelperClass(in ClassToGenerate classToGenerate)
     {
         var sb = new StringBuilder();
         sb.Append(_header);
@@ -74,7 +74,7 @@ namespace ").Append(classToGenerate.Namespace).Append(@"
         return sb.ToString();
     }
 
-    public static string GenerateExtensionClass(ClassToGenerate classToGenerate)
+    public static string GenerateExtensionClass(in ClassToGenerate classToGenerate)
     {
         var sb = new StringBuilder();
         sb.Append(_header);
