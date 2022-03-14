@@ -26,7 +26,6 @@ using CharGenerators;
 [CharExtensions(Global = true)]
 public class MyTestClass
 {
-
 }";
 
         // Pass the source code to our helper and snapshot test the output.
@@ -47,7 +46,6 @@ namespace MyTestNamespace
     [CharExtensions(Global = true)]
     public class MyTestClass
     {
-
     }
 }";
 
@@ -68,7 +66,6 @@ namespace MyTestNamespace.Sub;
 [CharExtensions(Global = true, OptimizeFor = ""*"")]
 public class MyTestClass
 {
-
 }
 ";
 
@@ -89,7 +86,6 @@ namespace MyTestNamespace;
 [CharExtensions]
 public partial class MyTestClass
 {
-
 }";
 
         var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
@@ -109,7 +105,6 @@ namespace MyTestNamespace;
 [CharExtensions(OptimizeFor = ""0123456789"")]
 public partial class MyTestClass
 {
-
 }";
 
         var (diagnostics, output) = TestHelpers.GetGeneratedOutput<CharExtensionsSourceGenerator>(input);
