@@ -39,7 +39,7 @@ namespace MyNamespace
     public class MyClass
     {
     }
-}";
+}
 ```
 
 This will generate a class called `CharExtensions`, which contains the `ToStringFast()` extension method and optimized for printable ASCII characters. For example:
