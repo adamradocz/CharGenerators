@@ -1,3 +1,4 @@
+using CharGenerators.Extensions;
 using System.Text;
 
 namespace CharGenerators;
@@ -40,94 +41,35 @@ namespace CharGenerators
 
     public static string GeneratePrivateHelperClass(in ClassToGenerate classToGenerate)
     {
-        var sb = new StringBuilder();
-        sb.Append(_header);
-        if (!string.IsNullOrEmpty(classToGenerate.Namespace))
-        {
-            sb.Append(@"
-namespace ").Append(classToGenerate.Namespace).Append(@"
-{");
-        }
+        bool isStatic = false;
 
-        sb.Append(@"
-    ").Append($@"{classToGenerate.Accessibility.ToString().ToLower()} partial class {classToGenerate.Name}
-    {{
-        private string CharToStringFast(char value)
-            => value switch
-            {{");
-        foreach (char optimizeFor in classToGenerate.OptimizeFor)
-        {
-            sb.Append($@"
-                {GetSwitchSection(optimizeFor)}");
-        }
-        sb.Append($@"
-                _ => value.ToString()
-            }};
-    }}");
+        var stringBuilder = new StringBuilder();
+        stringBuilder
+            .Append(_header)
+            .AppendNamespaceOpening(classToGenerate.Namespace)
+            .AppendClassOpening(classToGenerate.Accessibility.ToString().ToLower(), isStatic, classToGenerate.Name)
+            .AppendMethod("private", isStatic, "string", "CharToStringFast(char value)")
+            .AppendSwitchExpression(classToGenerate.OptimizeFor)
+            .AppendClassEnding()
+            .AppendNamespaceEnding(classToGenerate.Namespace);
 
-        if (!string.IsNullOrEmpty(classToGenerate.Namespace))
-        {
-            sb.Append(@"
-}");
-        }
-
-        return sb.ToString();
+        return stringBuilder.ToString();
     }
 
     public static string GenerateExtensionClass(in ClassToGenerate classToGenerate)
     {
-        var sb = new StringBuilder();
-        sb.Append(_header);
-        if (!string.IsNullOrEmpty(classToGenerate.Namespace))
-        {
-            sb.Append(@"
-namespace ").Append(classToGenerate.Namespace).Append(@"
-{");
-        }
+        string accessibility = "public";
+        bool isStatic = true;
 
-        sb.Append(@"
-    ").Append($@"public static partial class CharExtensions
-    {{
-        public static string ToStringFast(this char value)
-            => value switch
-            {{");
-        foreach (char optimizeFor in classToGenerate.OptimizeFor)
-        {
-            sb.Append($@"
-                {GetSwitchSection(optimizeFor)}");
-        }
-        sb.Append($@"
-                _ => value.ToString()
-            }};
-    }}");
-        if (!string.IsNullOrEmpty(classToGenerate.Namespace))
-        {
-            sb.Append(@"
-}");
-        }
-        return sb.ToString();
-    }
-
-    private static string GetSwitchSection(char optimizeFor)
-    {
-        // Escape the char
-        if (optimizeFor == '\'')
-        {
-            return @$"'\{optimizeFor}' => ""{optimizeFor}"",";
-        }
-
-        // Escape the string
-        if (optimizeFor == '"')
-        {
-            return @$"'{optimizeFor}' => ""\{optimizeFor}"",";
-        }
-
-        // Escape the char and the string.
-        if (optimizeFor == '\\')
-        {
-            return @$"'\{optimizeFor}' => ""\{optimizeFor}"",";
-        }
-
-        return @$"'{optimizeFor}' => ""{optimizeFor}"",";
+        var stringBuilder = new StringBuilder();
+        stringBuilder
+            .Append(_header)
+            .AppendNamespaceOpening(classToGenerate.Namespace)
+            .AppendClassOpening(accessibility, isStatic, "CharExtensions")
+            .AppendMethod(accessibility, isStatic, "string", "ToStringFast(this char value)")
+            .AppendSwitchExpression(classToGenerate.OptimizeFor)
+            .AppendClassEnding()
+            .AppendNamespaceEnding(classToGenerate.Namespace);
+        return stringBuilder.ToString();
     }
 }
