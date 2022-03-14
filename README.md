@@ -165,7 +165,7 @@ namespace MyNamespace
     public partial class MyClass
     {
     }
-}";
+}
 ```
 
 This will generate a `partial class MyClass` class, which contains the `CharToStringFast()` helper method.
