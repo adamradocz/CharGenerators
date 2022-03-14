@@ -40,8 +40,8 @@ namespace {nameSpace}
 
     internal static StringBuilder AppendClassEnding(this StringBuilder stringBuilder)
     {
-        return stringBuilder.Append($@"
-    }}");
+        return stringBuilder.Append(@"
+    }");
     }
 
     internal static StringBuilder AppendMethod(this StringBuilder stringBuilder, in string accesibility, bool isStatic, in string returnType, in string nameWithSignature)
@@ -91,6 +91,7 @@ namespace {nameSpace}
                 '\{optimizeFor}' => ""\{optimizeFor}"",");
         }
 
+        // No need to escape
         return stringBuilder.Append($@"
                 '{optimizeFor}' => ""{optimizeFor}"",");
     }
