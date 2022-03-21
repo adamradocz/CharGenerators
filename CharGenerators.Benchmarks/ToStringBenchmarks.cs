@@ -15,6 +15,9 @@ public partial class ToStringBenchmarks
     public string CharToString() => Characters.ToString();
 
     [Benchmark]
+    public string NewString() => new(Characters, 1);
+
+    [Benchmark]
     [System.Runtime.CompilerServices.SkipLocalsInit]
     public string StringCreate() =>
         string.Create(1, Characters, (buffer, value) =>

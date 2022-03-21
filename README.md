@@ -5,6 +5,24 @@ Based on: Andrew Lock's [NetEscapades.EnumGenerators](https://github.com/andrewl
 
 > This source generator requires the .NET 6 SDK. You can target earlier frameworks like .NET Core 3.1 etc, but the _SDK_ must be at least 6.0.100
 
+## Benchmark
+``` ini
+
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.19044.1586 (21H2)
+Intel Core i7-10700 CPU 2.90GHz, 1 CPU, 16 logical and 8 physical cores
+.NET SDK=7.0.100-preview.1.22110.4
+  [Host]     : .NET 6.0.3 (6.0.322.12309), X64 RyuJIT  [AttachedDebugger]
+  DefaultJob : .NET 6.0.3 (6.0.322.12309), X64 RyuJIT
+
+
+```
+|       Method | Characters |     Mean |     Error |    StdDev | Ratio | RatioSD | Code Size |  Gen 0 | Allocated |
+|------------- |----------- |---------:|----------:|----------:|------:|--------:|----------:|-------:|----------:|
+| ToStringFast |          0 | 1.112 ns | 0.0419 ns | 0.0392 ns |  0.48 |    0.02 |     231 B |      - |         - |
+| CharToString |          0 | 2.301 ns | 0.0595 ns | 0.0497 ns |  1.00 |    0.00 |      29 B | 0.0029 |      24 B |
+| StringCreate |          0 | 4.855 ns | 0.0531 ns | 0.0496 ns |  2.11 |    0.05 |     380 B | 0.0029 |      24 B |
+|    NewString |          0 | 5.707 ns | 0.0364 ns | 0.0323 ns |  2.48 |    0.06 |      27 B | 0.0029 |      24 B |
+
 ## Usage
 
 Add the `CharGenerators` to your project. You can additionally mark the package as `PrivateAsets="all"` and `ExcludeAssets="runtime"` in the `<PackageReference>`.
