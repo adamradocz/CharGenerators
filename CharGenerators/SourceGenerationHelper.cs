@@ -20,7 +20,7 @@ public static class SourceGenerationHelper
 #if CAHRGENERATORS_EMBED_ATTRIBUTES
 namespace CharGenerators
 {
-    [System.AttributeUsage(System.AttributeTargets.Class, Inherited = false)]
+    [System.AttributeUsage(System.AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     [System.Diagnostics.Conditional(""CHARGENERATORS_USAGES"")]
     public class CharExtensionsAttribute : System.Attribute
     {
